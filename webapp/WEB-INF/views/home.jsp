@@ -64,8 +64,16 @@
             <div class="form-group">
               <label for="fecha">Fecha: </label>
               <select id="fecha" name="fecha" class="form-control">
-                 <c:forEach items="${fechas}" var="facha">                  
-					<option value="${facha}">${facha}</option>                            
+                 <c:forEach items="${fechas}" var="facha">
+                    <c:choose>
+                        <c:when test="${fechaBusqueda == facha}">
+                           <option value="${facha}" selected="selected" >${facha}</option>
+                        </c:when>
+                        <c:otherwise>
+					         <option value="${facha}">${facha}</option>                        
+                        </c:otherwise>      
+                    </c:choose>
+                                                    
                  </c:forEach>
               </select>
             </div>            
