@@ -2,36 +2,66 @@ package net.itinajero.app.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.itinajero.app.model.Pelicula;
+import net.itinajero.app.util.Utileria;
 
 @Controller
 public class HomeController {
 
+    private  SimpleDateFormat dateForma = new SimpleDateFormat("dd-MM-yyyy");
+  
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String goHome() {
 		return "home";
 	}
+	
+	@RequestMapping(value="/search",method = RequestMethod.POST)
+	public String buscar(@RequestParam("fecha") String fecha,Model model) {
+		System.out.println("Buscamos todas las peliculas a la fecha : "+fecha);
+		
+        List<Pelicula> peliculas = getLista();
+		
+		List<String> listaFechas = Utileria.getNextDays(10);
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String mostrarPrincipal(Model model) {
-
-		List<Pelicula> peliculas = getLista();
-//		peliculas.add("Rapido y furioso");
-//		peliculas.add("El aro 2");
-//		peliculas.add("Aliens");
+		model.addAttribute("fechas",listaFechas);
 		model.addAttribute("peliculas", peliculas);
-
+        model.addAttribute("fechaBusqueda",fecha );
+		
 		return "home";
 	}
 
-	@RequestMapping(value = "/detail")
-	public String mostrarDetalle(Model model) {
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+ 	public String mostrarPrincipal(Model model) {
+
+		List<Pelicula> peliculas = getLista();
+		
+		List<String> listaFechas = Utileria.getNextDays(10);
+
+		model.addAttribute("fechas",listaFechas);
+		model.addAttribute("peliculas", peliculas);
+        model.addAttribute("fechaBusqueda", dateForma.format(new Date()) );
+		return "home";
+		
+	}
+
+	//@RequestMapping(value = "/detail/{id}/{fecha}",method = RequestMethod.GET)
+	@RequestMapping(value = "/detail",method = RequestMethod.GET)
+	//public String mostrarDetalle(Model model,@PathVariable("id") int idPelicula,@PathVariable("fecha") String fecha2)
+	public String mostrarDetalle(Model model,@RequestParam("idMovie") int idPelicula,@RequestParam("fecha") String fecha2) {
+		
+		System.out.println("Id de pelicula : "+idPelicula);
+		System.out.println("Fecha : "+fecha2);
+		
 		String tituloPelicula = "Rapidos y furiosos";
 		int duracion = 136;
 		double precioEntrada = 50;
