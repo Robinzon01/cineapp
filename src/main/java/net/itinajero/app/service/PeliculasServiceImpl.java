@@ -94,4 +94,11 @@ public class PeliculasServiceImpl implements IPeliculasService {
 		return null;
 	}
 
+	@Override
+	public void insert(Pelicula pelicula) {
+		// TODO Auto-generated method stub
+		lista.add(pelicula);
+		
+	}
+
 }
